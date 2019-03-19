@@ -48,6 +48,15 @@ export default class CreateWorkoutScreen extends React.Component {
 			sets: sets.filter(({ id }) => id !== setId),
 		}));
 	};
+	removeExercise = exerciseId => {
+		this.setState(({ exercises, sets }) => {
+      const exerciseToRemove = exercises.find(({ id }) => id === exerciseId);
+			return {
+        exercises: exercises.filter(({ id }) => id !== exerciseId),
+				sets: sets.filter(({ id }) => !exerciseToRemove.sets.includes(id)),
+			};
+		});
+	};
 	handleNameChange = name => {
 		this.setState({
 			name
@@ -71,6 +80,7 @@ export default class CreateWorkoutScreen extends React.Component {
 							onSetChange={this.handleSetChange}
 							addSet={this.addSet.bind(this, item.id)}
 							removeSet={this.removeSet.bind(this, item.id)}
+							removeExercise={this.removeExercise.bind(this, item.id)}
 						/>}
 					ListEmptyComponent={() =>
 						<Text>No Exercises Added, Press the Plus to Add One</Text>}

@@ -9,7 +9,7 @@ const Workout = ({ name, id, openWorkout }) => (
 		>
 			<Card.Title
 				title={name}
-				left={(props) => <Avatar.Icon {...props} icon="folder" />}
+				left={(props) => <Avatar.Icon {...props} icon="fitness-center" />}
 				subtitle="Press for more details"
 			/>
 		</TouchableRipple>

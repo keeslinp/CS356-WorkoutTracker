@@ -20,17 +20,28 @@ const EditSet = ({ reps, weight, onChange, removeSet, id }) => (
 			label="Weight"
 			mode="outlined"
 		/>
-    <IconButton
+		<IconButton
 			icon="delete"
-      onPress={() => removeSet(id)}
+			onPress={() => removeSet(id)}
 		/>
 	</View>
 );
 
-const EditExercise = ({ onChange, sets, allSets, name, onSetChange, addSet, removeSet }) => (
+const EditExercise = ({ onChange, sets, allSets, name, onSetChange, addSet, removeSet, removeExercise }) => (
 	<Card style={styles.card}>
 		<Card.Content>
-			<TextInput label="Name" value={name} onChangeText={(value) => onChange('name', value)} />
+			<View style={styles.nameField}>
+				<TextInput
+					label="Name"
+					value={name}
+					onChangeText={(value) => onChange('name', value)}
+					style={styles.nameTextField}
+				/>
+				<IconButton
+					icon="delete"
+					onPress={removeExercise}
+				/>
+			</View>
 			<FlatList
 				data={sets}
 				keyExtractor={(id) => id}
@@ -57,10 +68,13 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'flex-end',
+		alignItems: 'center',
+		marginTop: 5,
+		marginRight: 20,
 	},
 	valueField: {
 		width: 100,
-    marginLeft: 20,
+		marginLeft: 20,
 		marginRight: 20,
 	},
 	iconContainer: {
@@ -70,7 +84,15 @@ const styles = StyleSheet.create({
 	},
 	card: {
 		margin: 10,
-	}
+	},
+	nameField: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	nameTextField: {
+		minWidth: '90%',
+	},
 });
 
 export default EditExercise;
