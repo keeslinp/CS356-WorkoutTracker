@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
-import { Text, TextInput } from 'react-native-paper';
+import { Text, TextInput, FAB, IconButton } from 'react-native-paper';
 import uuid from 'uuid/v4';
-import { FAB, IconButton } from 'react-native-paper';
 import { set } from 'lodash';
-
+import { connect } from 'react-redux';
 import AppBar from '../components/AppBar';
 import EditExercise from '../components/EditExercise';
+import { saveWorkout } from '../redux/actions';
 
-export default class CreateWorkoutScreen extends React.Component {
+class CreateWorkoutScreen extends React.Component {
 	state = {
 		exercises: [],
 		sets: [],
@@ -44,15 +44,15 @@ export default class CreateWorkoutScreen extends React.Component {
 	};
 	removeSet = (exerciseId, setId) => {
 		this.setState(({ exercises, sets }) => ({
-      exercises: exercises.map(val => (val.id === exerciseId) ? set(val, 'sets', val.sets.filter(val => val !== setId)) : val),
+			exercises: exercises.map(val => (val.id === exerciseId) ? set(val, 'sets', val.sets.filter(val => val !== setId)) : val),
 			sets: sets.filter(({ id }) => id !== setId),
 		}));
 	};
 	removeExercise = exerciseId => {
 		this.setState(({ exercises, sets }) => {
-      const exerciseToRemove = exercises.find(({ id }) => id === exerciseId);
+			const exerciseToRemove = exercises.find(({ id }) => id === exerciseId);
 			return {
-        exercises: exercises.filter(({ id }) => id !== exerciseId),
+				exercises: exercises.filter(({ id }) => id !== exerciseId),
 				sets: sets.filter(({ id }) => !exerciseToRemove.sets.includes(id)),
 			};
 		});
@@ -62,11 +62,15 @@ export default class CreateWorkoutScreen extends React.Component {
 			name
 		});
 	}
+	handleSave = () => {
+		this.props.saveWorkout(this.state.exercises, this.state.sets, this.state.name);
+		this.props.navigation.goBack();
+	};
 	render() {
 		return (
 			<View style={styles.container}>
 				<AppBar title="Create Workout" goBack={() => this.props.navigation.goBack()}>
-					<IconButton icon="save" />
+					<IconButton icon="save" onPress={this.handleSave} />
 				</AppBar>
 				<TextInput label="Workout Name" value={this.state.name} onChangeText={this.handleNameChange} />
 				<FlatList
@@ -106,3 +110,9 @@ const styles = StyleSheet.create({
 		height: '100%',
 	},
 })
+
+const mapStateToProps = () => ({});
+const mapDispatchToProps = dispatch => ({
+	saveWorkout: (exercises, sets, name) => dispatch(saveWorkout(exercises, sets, name)),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(CreateWorkoutScreen);

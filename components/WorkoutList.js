@@ -19,7 +19,7 @@ const Workout = ({ name, id, openWorkout }) => (
 const WorkoutList = ({ workouts, openWorkout }) => {
 	return (
 		<FlatList
-			data={workouts}
+			data={Object.values(workouts)}
 			keyExtractor={({ id }) => id}
 			renderItem={({ item }) => <Workout {...item} openWorkout={openWorkout} />}
 		/>

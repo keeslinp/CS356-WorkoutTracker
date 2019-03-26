@@ -23,11 +23,11 @@ const Exercise = ({ name, sets }) => (
     </List.Accordion>
 );
 
-const Exercises = ({ exercises }) => (
+const Exercises = ({ exercises, sets }) => (
   <FlatList
     data={exercises}
     keyExtractor={({ id }) => id}
-    renderItem={({ item }) => <Exercise {...item} />}
+		renderItem={({ item }) => <Exercise {...item} sets={sets} />}
   />
 );
 

@@ -4,13 +4,13 @@ import {
   View,
 } from 'react-native';
 import { FAB } from 'react-native-paper';
+import { connect } from 'react-redux';
 
 import WorkoutList from '../components/WorkoutList';
-import workouts from '../constants/Workouts';
 import AppBar from '../components/AppBar';
 
 
-export default class HomeScreen extends React.Component {
+class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
@@ -19,6 +19,7 @@ export default class HomeScreen extends React.Component {
 	createWorkout = () => this.props.navigation.push('CreateWorkout');
 
   render() {
+	  const { workouts } = this.props;
     return (
 	    <View style={styles.container}>
 		    <AppBar title="Past Workouts" />
@@ -34,13 +35,23 @@ export default class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  fab: {
-    position: 'absolute',
-    margin: 16,
-    right: 0,
-    bottom: 0,
-  },
+	fab: {
+		position: 'absolute',
+		margin: 16,
+		right: 0,
+		bottom: 0,
+	},
 	container: {
 		height: '100%',
 	},
-})
+});
+
+const mapStateToProps = (state) => ({
+	workouts: state.workouts,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  dispatch
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
