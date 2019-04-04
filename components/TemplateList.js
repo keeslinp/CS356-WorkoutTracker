@@ -19,7 +19,7 @@ const Workout = ({ workout: { name, id }, openWorkout, time, id: templateId }) =
 const TemplateList = ({ workouts, openWorkout }) => {
 	return (
 		<FlatList
-			data={Object.values(workouts)}
+			data={Object.values(workouts).sort((a, b) => a.workout.name > b.workout.name)}
 			keyExtractor={({ id }) => id}
 			renderItem={({ item }) => <Workout {...item} openWorkout={openWorkout} />}
 		/>

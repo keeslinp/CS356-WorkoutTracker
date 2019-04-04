@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, View, FlatList, TextInput } from 'react-native';
-import { Card, IconButton, Text, Button, Checkbox } from 'react-native-paper';
+import { Card, IconButton, Text, Button, Checkbox, TextInput as PaperInput } from 'react-native-paper';
 
-const EditSet = ({ reps, weight, onChange, removeSet, id, touched, completed }) => (
+const EditSet = ({ reps, weight, onChange, removeSet, id, touched, completed, isRunning }) => (
 	<View style={styles.valueRow}>
-	  <Checkbox
+	  {isRunning && <Checkbox
   	  status={completed ? 'checked' : 'unchecked'}
 			onPress={() => onChange(id, 'completed', !completed)}
-	  />
+	  />}
   	<View style={styles.valueContainer}>
   		<TextInput
   			placeholder={reps ? reps : 'Reps'}
@@ -37,7 +37,7 @@ const EditExercise = ({ onChange, sets, allSets, name, onSetChange, addSet, remo
 	<Card style={styles.card}>
 		<Card.Content>
 			<View style={styles.nameField}>
-				<TextInput
+				<PaperInput
 					label="Name"
 					value={name}
 					onChangeText={(value) => onChange('name', value)}

@@ -4,12 +4,12 @@ export const SAVE_WORKOUT = 'SAVE_WORKOUT';
 export const SAVE_TEMPLATE = 'SAVE_TEMPLATE';
 export const SAVE_HISTORY = 'SAVE_HISTORY';
 
-export const saveWorkout = (exercises, sets, name) => ({
+export const saveWorkout = (exercises, sets, name, id) => ({
   type: SAVE_WORKOUT,
 	payload: {
 		exercises,
 		sets,
-		id: uuid(),
+		id: id || uuid(),
 		name,
 	},
 });

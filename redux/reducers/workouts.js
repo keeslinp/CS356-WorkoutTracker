@@ -1,15 +1,6 @@
 import { SAVE_WORKOUT } from '../actions';
 
 const initial = {
-	workout_1: {
-		id: 'workout_1',
-		name: 'Pull Day',
-		exercises: [
-			'first',
-			'second',
-			'third',
-		],
-	},
 };
 
 export const workouts = (state = initial, action) => {

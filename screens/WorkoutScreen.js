@@ -7,8 +7,7 @@ import { IconButton } from 'react-native-paper';
 import Exercises from '../components/Exercises';
 import AppBar from '../components/AppBar';
 
-const WorkoutScreen = ({ navigation, workout, sets, exercises }) => {
-	const id = navigation.getParam('id', null);
+const WorkoutScreen = ({ navigation, workout, sets, exercises, id }) => {
 	const templateId = navigation.getParam('templateId', null);
 	if (!id) {
 		return <Text>Missing</Text>;
@@ -44,14 +43,16 @@ const WorkoutScreen = ({ navigation, workout, sets, exercises }) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-	const id = ownProps.navigation.getParam('id', null);
+  const templateId = ownProps.navigation.getParam('templateId', null);
+  const id = templateId ? state.templates[templateId].workoutId : ownProps.navigation.getParam('id', null);
 	const workout = state.workouts[id];
-	const exercises = workout.exercises.map(id => state.exercises[id]);
-	const sets = flattenDepth(exercises.map(exercise => exercise.sets)).map(id => state.sets[id]);
+	const exercises = workout.exercises.map(exerciseId => state.exercises[id][exerciseId]);
+	const sets = flattenDepth(exercises.map(exercise => exercise.sets)).map(setId => state.sets[id][setId]);
 	return {
 		workout,
 		exercises,
 		sets,
+		id,
 	};
 }
 
