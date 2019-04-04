@@ -1,26 +1,35 @@
 import React from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Text, TextInput, FAB, IconButton } from 'react-native-paper';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import uuid from 'uuid/v4';
-import { set } from 'lodash';
+import { set, flattenDepth } from 'lodash';
 import { connect } from 'react-redux';
 import AppBar from '../components/AppBar';
 import EditExercise from '../components/EditExercise';
-import { saveWorkout } from '../redux/actions';
+import { saveWorkout, saveTemplate, saveHistory } from '../redux/actions';
 
 class CreateWorkoutScreen extends React.Component {
-	state = {
-		exercises: [],
-		sets: [],
-		name: '',
+	constructor(props) {
+		super(props);
+		this.state = {
+      exercises: props.exercises,
+      sets: props.sets,
+      name: props.name,
+    };
 	}
+	getTemplateId = () => this.props.navigation.getParam('templateId', undefined);
+	getId = () => this.props.navigation.getParam('id', undefined);
+	isEditing = () => this.props.navigation.getParam('isEditing', false);
+	isRunning = () => Boolean(this.getTemplateId()) && !this.isEditing();
 	addExcercise = () => {
+		const id = uuid();
 		this.setState(({ exercises }) => ({
 			exercises: [...exercises, {
-				id: uuid(),
+				id,
 				sets: [],
 			}],
-		}));
+		}), () => this.addSet(id));
 	};
 
 	handleWorkoutChange = (id, path, value) => {
@@ -30,7 +39,13 @@ class CreateWorkoutScreen extends React.Component {
 	};
 	handleSetChange = (id, path, value) => {
 		this.setState(({ sets }) => ({
-			sets: sets.map(val => (val.id === id ? set(val, path, value) : val)),
+			sets: sets.map(val => {
+  			if (val.id === id) {
+    			console.log(id, path, value);
+    			return Object.assign(set(val, path, value), { touched: true });
+  			}
+  			return val;
+			}),
 		}));
 	};
 	addSet = (exerciseId) => {
@@ -39,6 +54,7 @@ class CreateWorkoutScreen extends React.Component {
 			exercises: exercises.map(val => (val.id === exerciseId ? set(val, 'sets', [...val.sets, id]) : val)),
 			sets: [...sets, {
 				id,
+				touched: true,
 			}],
 		}));
 	};
@@ -63,18 +79,38 @@ class CreateWorkoutScreen extends React.Component {
 		});
 	}
 	handleSave = () => {
-		this.props.saveWorkout(this.state.exercises, this.state.sets, this.state.name);
+		const action = this.props.saveWorkout(this.state.exercises, this.state.sets, this.state.name);
+		const templateId = this.getTemplateId();
+		if (!templateId || this.isEditing()) {
+			this.props.saveTemplate(action.payload.id, templateId);
+		} else {
+			this.props.saveHistory(action.payload.id);
+		}
 		this.props.navigation.goBack();
+	};
+  headerText = () => {
+	  if (this.getId()) {
+		  if (this.isEditing()) {
+			  return 'Edit Workout';
+		  }
+      return 'Perform Workout';
+	  }
+	  return 'Create Workout';
 	};
 	render() {
 		return (
 			<View style={styles.container}>
-				<AppBar title="Create Workout" goBack={() => this.props.navigation.goBack()}>
+				<AppBar title={this.headerText()} goBack={() => this.props.navigation.goBack()}>
 					<IconButton icon="save" onPress={this.handleSave} />
 				</AppBar>
 				<TextInput label="Workout Name" value={this.state.name} onChangeText={this.handleNameChange} />
-				<FlatList
+				<KeyboardAwareFlatList
 					data={this.state.exercises}
+					enableOnAndroid
+					enableAutomaticScroll
+          extraHeight={100}
+					extraScrollHeight={100}
+					keyboardOpeningTime={50}
 					keyExtractor={({ id }) => id}
 					renderItem={({ item }) =>
 						<EditExercise
@@ -85,6 +121,7 @@ class CreateWorkoutScreen extends React.Component {
 							addSet={this.addSet.bind(this, item.id)}
 							removeSet={this.removeSet.bind(this, item.id)}
 							removeExercise={this.removeExercise.bind(this, item.id)}
+							isRunning={this.isRunning()}
 						/>}
 					ListEmptyComponent={() =>
 						<Text>No Exercises Added, Press the Plus to Add One</Text>}
@@ -111,8 +148,32 @@ const styles = StyleSheet.create({
 	},
 })
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state, ownProps) => {
+	const id = ownProps.navigation.getParam('id', null);
+	if (!id) {
+		return {
+      exercises: [],
+			sets: [],
+			name: '',
+		};
+	}
+	const workout = state.workouts[id];
+	const exercises = workout.exercises.map(exerciseId => state.exercises[exerciseId]);
+	const sets = flattenDepth(exercises.map(({ sets }) => sets.map(setId => state.sets[setId])))
+	  .map(({ reps, weight, ...rest}) => ({
+  	  ...rest,
+  	  reps: `${reps}`,
+  	  weight: `${weight}`,
+	  }));
+	return {
+		name: workout.name,
+    exercises,
+		sets,
+	};
+};
 const mapDispatchToProps = dispatch => ({
 	saveWorkout: (exercises, sets, name) => dispatch(saveWorkout(exercises, sets, name)),
+	saveTemplate: (workoutId, templateId) => dispatch(saveTemplate(workoutId, templateId)),
+	saveHistory: (workoutId) => dispatch(saveHistory(workoutId)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(CreateWorkoutScreen);

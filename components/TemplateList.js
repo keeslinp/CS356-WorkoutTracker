@@ -2,10 +2,10 @@ import React from 'react';
 import { FlatList } from 'react-native';
 import { Avatar, Card, TouchableRipple } from 'react-native-paper';
 
-const Workout = ({ name, id, openWorkout }) => (
+const Workout = ({ workout: { name, id }, openWorkout, time, id: templateId }) => (
 	<Card>
 		<TouchableRipple
-			onPress={() => openWorkout(id)}
+			onPress={() => openWorkout(id, templateId)}
 		>
 			<Card.Title
 				title={name}
@@ -16,7 +16,7 @@ const Workout = ({ name, id, openWorkout }) => (
 	</Card>
 );
 
-const WorkoutList = ({ workouts, openWorkout }) => {
+const TemplateList = ({ workouts, openWorkout }) => {
 	return (
 		<FlatList
 			data={Object.values(workouts)}
@@ -26,4 +26,4 @@ const WorkoutList = ({ workouts, openWorkout }) => {
 	);
 };
 
-export default WorkoutList;
+export default TemplateList;

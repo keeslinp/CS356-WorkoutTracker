@@ -3,32 +3,25 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { FAB } from 'react-native-paper';
 import { connect } from 'react-redux';
 
-import WorkoutList from '../components/WorkoutList';
+import HistoryList from '../components/HistoryList';
 import AppBar from '../components/AppBar';
 
 
-class HomeScreen extends React.Component {
+class HistoryScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
 
 	openWorkout = (id) => this.props.navigation.push('Workout', { id });
-	createWorkout = () => this.props.navigation.push('CreateWorkout');
 
   render() {
-	  const { workouts } = this.props;
+	  const { history } = this.props;
     return (
 	    <View style={styles.container}>
 		    <AppBar title="Past Workouts" />
-        <WorkoutList workouts={workouts} openWorkout={this.openWorkout} />
-        <FAB
-          style={styles.fab}
-          icon="add"
-			    onPress={this.createWorkout}
-		    />
+		    <HistoryList workouts={history} openWorkout={this.openWorkout} />
       </View>
     );
   }
@@ -46,12 +39,18 @@ const styles = StyleSheet.create({
 	},
 });
 
-const mapStateToProps = (state) => ({
-	workouts: state.workouts,
-});
+const mapStateToProps = (state) => {
+	const history = Object.values(state.history).map(({ workoutId, ...rest }) => ({
+    ...rest,
+    workout: state.workouts[workoutId],
+	}));
+	return {
+		history,
+	};
+};
 
 const mapDispatchToProps = (dispatch) => ({
   dispatch
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(HistoryScreen);

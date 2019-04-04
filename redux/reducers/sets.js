@@ -1,13 +1,13 @@
 import { SAVE_WORKOUT } from '../actions';
 
 const initial = {
-	first_set: { id: 'first set', reps: 20, weight: 10 },
-	second_set: { id: 'second set', reps: 10, weight: 10 },
-	third_set: { id: 'third set', reps: 8, weight: 40 },
-	fourth_set: { id: 'fourth set', reps: 8, weight: 40 },
-	fifth_set: { id: 'fifth set', reps: 6, weight: 40 },
-	'6_set': { id: '6 set', reps: 20, weight: 10 },
-	'7_set': { id: '7 set', reps: 10, weight: 10 },
+	first_set: { id: 'first_set', reps: 20, weight: 10 },
+	second_set: { id: 'second_set', reps: 10, weight: 10 },
+	third_set: { id: 'third_set', reps: 8, weight: 40 },
+	fourth_set: { id: 'fourth_set', reps: 8, weight: 40 },
+	fifth_set: { id: 'fifth_set', reps: 6, weight: 40 },
+	'6_set': { id: '6_set', reps: 20, weight: 10 },
+	'7_set': { id: '7_set', reps: 10, weight: 10 },
 };
 
 export const sets = (state = initial, action) => {

@@ -1,25 +1,31 @@
 import React from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
-import { Card, TextInput, IconButton, Text } from 'react-native-paper';
+import { StyleSheet, View, FlatList, TextInput } from 'react-native';
+import { Card, IconButton, Text, Button, Checkbox } from 'react-native-paper';
 
-const EditSet = ({ reps, weight, onChange, removeSet, id }) => (
+const EditSet = ({ reps, weight, onChange, removeSet, id, touched, completed }) => (
 	<View style={styles.valueRow}>
-		<TextInput
-			value={reps}
-			onChangeText={(value) => onChange(id, 'reps', value)}
-			keyboardType="numeric"
-			style={styles.valueField}
-			label="Reps"
-			mode="outlined"
-		/>
-		<TextInput
-			value={weight}
-			onChangeText={(value) => onChange(id, 'weight', value)}
-			keyboardType="numeric"
-			style={styles.valueField}
-			label="Weight"
-			mode="outlined"
-		/>
+	  <Checkbox
+  	  status={completed ? 'checked' : 'unchecked'}
+			onPress={() => onChange(id, 'completed', !completed)}
+	  />
+  	<View style={styles.valueContainer}>
+  		<TextInput
+  			placeholder={reps ? reps : 'Reps'}
+  			value={touched ? reps : ''}
+  			onChangeText={(value) => onChange(id, 'reps', value)}
+  			keyboardType="numeric"
+  			style={styles.valueField}
+  		/>
+		</View>
+  	<View style={styles.valueContainer}>
+  		<TextInput
+  			placeholder={weight ? weight : 'Sets'}
+  			value={touched ? weight : ''}
+  			onChangeText={(value) => onChange(id, 'weight', value)}
+  			keyboardType="numeric"
+  			style={styles.valueField}
+  		/>
+		</View>
 		<IconButton
 			icon="delete"
 			onPress={() => removeSet(id)}
@@ -27,7 +33,7 @@ const EditSet = ({ reps, weight, onChange, removeSet, id }) => (
 	</View>
 );
 
-const EditExercise = ({ onChange, sets, allSets, name, onSetChange, addSet, removeSet, removeExercise }) => (
+const EditExercise = ({ onChange, sets, allSets, name, onSetChange, addSet, removeSet, removeExercise, isRunning }) => (
 	<Card style={styles.card}>
 		<Card.Content>
 			<View style={styles.nameField}>
@@ -50,15 +56,11 @@ const EditExercise = ({ onChange, sets, allSets, name, onSetChange, addSet, remo
 						{...allSets.find(({ id }) => id === item)}
 						onChange={onSetChange}
 						removeSet={removeSet}
+						isRunning={isRunning}
 					/>}
 				ListEmptyComponent={() => <Text>No sets, add one</Text>}
+				ListFooterComponent={() => <Button icon="add" onPress={addSet}>Add Set</Button>}
 			/>
-			<Card.Actions style={styles.iconContainer}>
-				<IconButton
-					icon="add"
-					onPress={addSet}
-				/>
-			</Card.Actions>
 		</Card.Content>
 	</Card>
 );
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
 		marginRight: 20,
 	},
 	valueField: {
-		width: 100,
+		width: 80,
 		marginLeft: 20,
 		marginRight: 20,
 	},
@@ -92,6 +94,12 @@ const styles = StyleSheet.create({
 	},
 	nameTextField: {
 		minWidth: '90%',
+	},
+	valueContainer: {
+  	borderWidth: 1,
+  	borderRadius: 4,
+  	marginLeft: 5,
+  	marginRight: 5,
 	},
 });
 

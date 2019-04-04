@@ -2,9 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 27658,
-  "expoServerNgrokUrl": "https://nn-6da.keeslinp.workouttracker.exp.direct",
-  "packagerNgrokUrl": "https://packager.nn-6da.keeslinp.workouttracker.exp.direct",
-  "ngrokPid": 27741,
+  "packagerPid": 5206,
+  "expoServerNgrokUrl": "https://nn-6da.anonymous.workouttracker.exp.direct",
+  "packagerNgrokUrl": "https://packager.nn-6da.anonymous.workouttracker.exp.direct",
+  "ngrokPid": 5609,
   "webpackServerPort": null
 }
