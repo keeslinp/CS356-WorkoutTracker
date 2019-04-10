@@ -19,13 +19,14 @@ const EditSet = ({ reps, weight, onChange, removeSet, id, touched, completed, is
 		</View>
   	<View style={styles.valueContainer}>
   		<TextInput
-  			placeholder={weight ? weight : 'Sets'}
+  			placeholder={weight ? weight : 'Weight'}
   			value={touched ? weight : ''}
   			onChangeText={(value) => onChange(id, 'weight', value)}
   			keyboardType="numeric"
   			style={styles.valueField}
   		/>
 		</View>
+		<Text>lb</Text>
 		<IconButton
 			icon="delete"
 			onPress={() => removeSet(id)}
@@ -38,7 +39,7 @@ const EditExercise = ({ onChange, sets, allSets, name, onSetChange, addSet, remo
 		<Card.Content>
 			<View style={styles.nameField}>
 				<PaperInput
-					label="Name"
+					label="Exercise Name"
 					value={name}
 					onChangeText={(value) => onChange('name', value)}
 					style={styles.nameTextField}

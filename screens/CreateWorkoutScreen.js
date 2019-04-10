@@ -18,6 +18,11 @@ class CreateWorkoutScreen extends React.Component {
       name: props.name,
     };
   }
+  componentDidMount() {
+    if (!this.getId()) {
+      this.addExcercise();
+    }
+  }
   getTemplateId = () => this.props.navigation.getParam('templateId', undefined);
   getId = () => this.props.navigation.getParam('id', undefined);
   isEditing = () => this.props.navigation.getParam('isEditing', false);
@@ -83,11 +88,11 @@ class CreateWorkoutScreen extends React.Component {
     if (shouldSave) {
       this.props.saveTemplate(this.state.newWorkoutId, this.getTemplateId());
     }
-    this.props.navigation.goBack();
+    this.props.navigation.popToTop();
   };
   handleSave = () => {
     const templateId = this.getTemplateId();
-    const action = this.props.saveWorkout(this.state.exercises, this.state.sets, this.state.name, Boolean(templateId) && this.props.id);
+    const action = this.props.saveWorkout(this.state.exercises, this.state.sets, this.state.name);
     if (!templateId || this.isEditing()) {
       this.props.saveTemplate(action.payload.id, templateId);
       this.props.navigation.goBack();

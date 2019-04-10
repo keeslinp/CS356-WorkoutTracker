@@ -25,13 +25,26 @@ const WorkoutScreen = ({ navigation, workout, sets, exercises, id }) => {
 			isEditing: true,
 		});
 	};
+
+	const deleteWorkout = () => {
+  	if (templateId) {
+  	}
+	};
 	return <View>
 		<AppBar title={workout.name} goBack={() => navigation.goBack()}>
 			{templateId &&
-				<IconButton
-          icon="play-circle-filled"
-          onPress={playWorkout}
-				/>
+  			[
+  				<IconButton
+            icon="play-circle-filled"
+            onPress={playWorkout}
+            key="play"
+  				/>,
+  				<IconButton
+            icon="delete"
+            key="delete"
+            onPress={deleteWorkout}
+  				/>
+  			]
 			}
       <IconButton
 				icon="edit"
@@ -54,6 +67,6 @@ const mapStateToProps = (state, ownProps) => {
 		sets,
 		id,
 	};
-}
+};
 
 export default connect(mapStateToProps)(WorkoutScreen);
